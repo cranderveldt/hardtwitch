@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" ng-app="myapp">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Hard Twitch</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/angular.js"></script>
+  <script src="js/script.js"></script>
+</head>
+<body ng-class="layout_type" ng-controller="Main">
+  <div class="container">
+    <!-- <div class="inputs">
+      <div class="flex-row-all">
+        <div class="flex-col-6" ng-repeat="username in streamers">
+          <input type="text" ng-model="username">
+        </div>
+      </div>
+    </div> -->
+    <div class="streamers">
+      <div class="stream" ng-repeat="streamer in streamers track by $index" da-stream ng-class="getStreamClasses(streamer, $index)">
+        <div class="intrinsic">
+          <div class="video-wrap">
+            <div class="video" da-video id="stream-video-{{$index}}" data-index="{{$index}}" data-channel="{{streamer.name}}"></div>
+          </div>
+          <div class="stream-controls">
+            <div class="drag-handle" ng-show="streamer.show_bar"><i class="fa fa-arrows"></i></div>
+            <button type="button" class="hide-twitch-bar icon-button" ng-click="toggleTwitchBar(streamer)">
+              <i class="fa fa-angle-down" ng-show="streamer.show_bar"></i>
+              <i class="fa fa-angle-up" ng-hide="streamer.show_bar"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-controls">
+      <button type="button" class="fullscreen-button icon-button" ng-click="toggleFullScreen()">
+        <i class="fa fa-arrows-alt"></i>
+      </button>
+      <button type="button" class="swap-streamers icon-button" ng-click="swapStreamers()">
+        <i class="fa fa-refresh"></i>
+      </button>
+      <div class="layout-chooser">
+        <i class="fa fa-columns"></i>
+        <select class="form-control" ng-model="layout_type" ng-options="option.id as option.name for option in layout_options">
+        </select>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
