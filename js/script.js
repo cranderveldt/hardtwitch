@@ -4,7 +4,8 @@ app.controller('Main',['$scope', '$sce', function ($scope, $sce) {
   $scope.layout_type = "layout-half"
   $scope.layout_options = [{ name: "Side-by-side", id: "layout-half" }, { name: "PiP", id: "layout-pip" }];
   $scope.layout_lookup = { "layout-half": "Side-by-side", "layout-pip": "PiP" };
-  $scope.streamers = [{ name: 'diabetech', show_bar: true }, { name: 'REXmoreOP', show_bar: true }];
+  $scope.streamers = [{ name: '', show_bar: true }, { name: '', show_bar: true }];
+  $scope.choose_streamers = false;
   // $scope.getUrl = function(username) {
   //   return $sce.trustAsResourceUrl('http://www.twitch.tv/' + username + '/embed');
   // };
@@ -62,6 +63,34 @@ app.controller('Main',['$scope', '$sce', function ($scope, $sce) {
       , { "allowScriptAccess":"always", "allowFullScreen":"true"});
     });
   };
+  $scope.checkBothStreams = function() {
+    var good_to_go = true;
+    for (var s in $scope.streamers) {
+      if ($scope.streamers[s].name === '') {
+        good_to_go = false;
+      }
+    }
+    if (good_to_go) {
+      $scope.choose_streamers = false;
+      for (var s in $scope.streamers) {
+        $scope.loadStream('stream-video-' + s, $scope.streamers[s].name);
+      }
+    } 
+  };
+  $scope.onPageLoad = function() {
+    if (window.location.hash) {
+      var hash_streamers = window.location.hash.substr(1).split('/');
+      for (var h in hash_streamers) {
+        $scope.streamers[h] = $scope.streamers[h] || { name: '', show_bar: true }
+        $scope.streamers[h].name = hash_streamers[h];
+        $scope.streamers[h].show_bar = true;
+        $scope.loadStream('stream-video-' + h, hash_streamers[h]);
+      }
+    } else {
+      $scope.choose_streamers = true;
+    }
+  };
+  $scope.onPageLoad();
 }]);
 app.directive('daStream', function () {
   return {
@@ -70,9 +99,9 @@ app.directive('daStream', function () {
     restrict: 'A',
     scope: false,
     link: function ($scope, element, attrs) {
-      // element.resizable({
-      //   aspectRatio: 16 / 9
-      // });
+      element.resizable({
+        aspectRatio: 16 / 9
+      });
       element.draggable({
         stack: '.streamers .stream'
         , handle: '.drag-handle'
@@ -81,15 +110,3 @@ app.directive('daStream', function () {
     }
   };
 });
-app.directive('daVideo', function () {
-  return {
-    replace: false,
-    transclude: false,
-    restrict: 'A',
-    scope: false,
-    link: function ($scope, element, attrs) {
-      $scope.loadStream(attrs.id, attrs.channel)
-    }
-  };
-});
-

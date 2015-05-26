@@ -12,18 +12,11 @@
 </head>
 <body ng-class="layout_type" ng-controller="Main">
   <div class="container">
-    <!-- <div class="inputs">
-      <div class="flex-row-all">
-        <div class="flex-col-6" ng-repeat="username in streamers">
-          <input type="text" ng-model="username">
-        </div>
-      </div>
-    </div> -->
     <div class="streamers">
       <div class="stream" ng-repeat="streamer in streamers track by $index" da-stream ng-class="getStreamClasses(streamer, $index)">
         <div class="intrinsic">
           <div class="video-wrap">
-            <div class="video" da-video id="stream-video-{{$index}}" data-index="{{$index}}" data-channel="{{streamer.name}}"></div>
+            <div class="video" id="stream-video-{{$index}}" data-index="{{$index}}" data-channel="{{streamer.name}}"></div>
           </div>
           <div class="stream-controls">
             <div class="drag-handle" ng-show="streamer.show_bar"><i class="fa fa-arrows"></i></div>
@@ -46,6 +39,14 @@
         <i class="fa fa-columns"></i>
         <select class="form-control" ng-model="layout_type" ng-options="option.id as option.name for option in layout_options">
         </select>
+      </div>
+    </div>
+    <div class="stream-chooser" ng-show="choose_streamers">
+      <h2>Enter channel names</h2>
+      <div class="flex-row-all flex-gutters-15">
+        <div class="flex-col-6" ng-repeat="streamer in streamers">
+          <input type="text" ng-model="streamer.name" class="input-default" placeholder="zoasty" ng-blur="checkBothStreams()">
+        </div>
       </div>
     </div>
   </div>
